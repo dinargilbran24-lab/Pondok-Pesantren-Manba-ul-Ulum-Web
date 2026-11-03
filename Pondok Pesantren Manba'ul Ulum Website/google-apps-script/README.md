@@ -62,8 +62,8 @@ Di Apps Script buka **Project Settings → Script Properties**, lalu tambahkan:
 1. Klik **Deploy → New deployment → Web app**.
 2. Pilih **Execute as: Me** dan **Who has access: Anyone**. Endpoint menerima
    POST publik: pendaftaran hanya menulis data, sedangkan permintaan Portal
-   Wali harus membawa token Google valid dan hanya mengembalikan data yang
-   ditautkan ke email wali. Tidak ada endpoint baca tanpa autentikasi.
+   Wali memerlukan sesi santri atau sesi pengurus yang valid sebelum membaca
+   atau mengubah data privat.
 3. Deploy, lalu salin URL Web App yang berakhiran `/exec` ke `appsScriptUrl`
    dalam `registration-config.js`. Salin juga URL Spreadsheet yang dibuat saat
    setup ke `adminSpreadsheetUrl` di berkas yang sama.
@@ -76,18 +76,17 @@ Di Apps Script buka **Project Settings → Script Properties**, lalu tambahkan:
 
 ## Menu Admin
 
-Menu **Admin** hanya menyediakan tautan ke Google Spreadsheet privat. Untuk
-memberi akses, buka Spreadsheet di akun yayasan, tekan **Bagikan**, lalu
-tambahkan alamat Google pengurus yang memang perlu mengelola data. Atur peran
-sesuai kebutuhan dan jangan pernah memilih **Siapa saja yang memiliki link**.
-Google akan meminta pengurus login dengan akunnya sendiri.
+Menu pengelolaan Portal Wali menggunakan nama pengguna dan kata sandi khusus
+pengurus, bukan Google Sign-In. Google Spreadsheet pendaftar tetap dilindungi
+oleh izin berbagi Google dan mungkin meminta akun Google tersendiri saat dibuka.
+Jangan pernah mengubah berbagi Spreadsheet menjadi **Siapa saja yang memiliki
+link**.
 
 Pengurus dapat mencari/mengurutkan pendaftar serta mengubah kolom
 **Status Pendaftaran** langsung di Spreadsheet. Profil, program, dan teks
 website masih statis; mengubahnya perlu mengedit file website lalu menerbitkan
-ulang ke GitHub Pages. Halaman Admin belum menjadi CMS. Pengelolaan kata sandi
-Portal Wali dijelaskan pada bagian berikut dan dibatasi ke akun pengelola yang
-diizinkan.
+ulang ke GitHub Pages. Menu Admin mengelola data Portal Wali, tetapi belum
+mengelola konten halaman publik website.
 
 ## Portal Wali Santri
 
@@ -98,26 +97,34 @@ HMAC-SHA-256 dan hanya salt serta hash yang disimpan pada tab **Akun Portal**.
 Setelah login, portal menggunakan token sesi sementara; kata sandi tidak
 dikirim ulang untuk permintaan data berikutnya.
 
-### Menyiapkan pengelola akses
+### Menyiapkan login pengurus
 
-1. Di Google Cloud Console, buat atau pilih project, siapkan **OAuth consent
-   screen**, lalu buat **OAuth Client ID → Web application**.
-2. Tambahkan origin hosting persis, misalnya `https://USERNAME.github.io`,
-   pada daftar **Authorized JavaScript origins**. Origin tidak menyertakan
-   path repository.
-3. Isi Client ID di `googleClientId` pada `portal-config.js` dan Script
-   Property `PORTAL_GOOGLE_CLIENT_ID`. Client ID hanya digunakan pengelola
-   untuk login Google di halaman **Admin** saat membuat atau mengganti kata
-   sandi wali. Client ID bukan secret; jangan pernah memasukkan Client Secret
-   ke website atau membagikannya melalui chat.
-4. Isi `appsScriptUrl` di `portal-config.js` dengan URL Web App `/exec`.
-   Tambahkan origin website yang sama ke Script Property
-   `PORTAL_ALLOWED_ORIGIN`.
-5. Tambahkan alamat Google pengelola yang berwenang ke Script Property
-   `PORTAL_ADMIN_EMAILS`. Jika lebih dari satu, pisahkan dengan koma. Hanya
-   akun-akun ini yang dapat mengatur kata sandi dari halaman **Admin**.
-6. Unggah website ke hosting HTTPS. Selesaikan publikasi atau validasi OAuth
-   consent screen yang diminta Google untuk project tersebut.
+1. Isi `appsScriptUrl` di `portal-config.js` dengan URL Web App `/exec`.
+2. Pada Apps Script buka **Project Settings → Script Properties**. Tambahkan:
+
+   | Property | Value |
+   | --- | --- |
+   | `PORTAL_ALLOWED_ORIGIN` | Origin HTTPS situs, misalnya `https://USERNAME.github.io` (tanpa path) |
+   | `PORTAL_ADMIN_USERNAME` | Nama pengguna pengurus, 3-64 karakter: huruf, angka, titik, garis bawah, atau tanda hubung |
+   | `PORTAL_ADMIN_PASSWORD` | Kata sandi sementara, minimal 14 karakter |
+
+3. Di Apps Script pilih fungsi `configurePortalAdministrator`, lalu klik
+   **Run** dan berikan izin. Fungsi ini membuat salt dan hash kata sandi,
+   kemudian menghapus nilai sementara `PORTAL_ADMIN_PASSWORD`. Jangan simpan
+   kata sandi ke file website, Spreadsheet, atau chat.
+4. Untuk mengganti kata sandi pengurus, perbarui property
+   `PORTAL_ADMIN_PASSWORD` dengan kata sandi baru, lalu jalankan kembali
+   `configurePortalAdministrator()`. Sesi pengurus lama otomatis tidak berlaku.
+5. Login pengurus tidak memerlukan `googleClientId` atau OAuth Client. Pastikan
+   origin website diakses melalui HTTPS.
+
+Saat ini satu nama pengguna dan kata sandi dipakai bersama oleh para pengurus
+yang diberi wewenang. Bagikan kredensial hanya melalui saluran privat dan
+ganti segera jika tidak lagi rahasia. Sesi pengurus berakhir otomatis paling
+lama setelah enam jam. Halaman Admin harus dibuka dari alamat HTTPS situs yang
+sudah dipublikasikan dan origin-nya harus cocok dengan `PORTAL_ALLOWED_ORIGIN`;
+membuka `admin.html` langsung dari komputer (`file://`) tidak dapat digunakan
+untuk login.
 
 ### Menyiapkan data dan akses wali
 
@@ -128,24 +135,27 @@ kesalahan dan perlu diperiksa sebelum menjalankannya kembali. Setelah
 mengubah Apps Script, terbitkan versi baru melalui **Deploy → Manage
 deployments → Edit → New version**.
 
-Pengelola mengisi tab berikut secara langsung pada Spreadsheet privat:
+Login ke halaman **Admin** dengan nama pengguna dan kata sandi pengurus yang
+telah disiapkan, lalu buka menu **Kepengurusan**. Pengurus dapat membuat,
+mengubah, dan menghapus data portal dari sana:
 
 | Tab | Kolom |
 | --- | --- |
-| `Portal Wali` | Email Wali, ID Santri, Status Akses (`Aktif` untuk memberi akses) |
+| `Portal Wali` | Email Wali, ID Santri, Status Akses (`Aktif` untuk memberi akses atau `Nonaktif` untuk mencabut akses) |
 | `Akun Portal` | Diisi otomatis oleh halaman Admin; jangan mengisi atau mengubah salt/hash secara manual |
-| `Data Santri` | ID Santri, Nama Santri, Kelas, Asrama, Status |
-| `Presensi` | ID, ID Santri, Tanggal, Status, Catatan |
-| `Tagihan` | ID, ID Santri, Nama Tagihan, Jumlah, Status, Jatuh Tempo, Tanggal Bayar |
-| `Akademik` | ID, ID Santri, Mata Pelajaran, Periode, Nilai, Catatan |
-| `Pengumuman` | ID, Judul, Isi, Terbit (`Ya`/`Tidak`), Waktu Terbit |
-| `Pesan Wali` | Terisi otomatis dari portal; pengurus dapat menambahkan Balasan dan mengubah Status |
+| `Data Santri` | Dikelola dari Kepengurusan: ID Santri, Nama Santri, Kelas, Asrama, Status |
+| `Presensi` | Dikelola dari Kepengurusan: ID, ID Santri, Tanggal, Status, Catatan |
+| `Tagihan` | Dikelola dari Kepengurusan: ID, ID Santri, Nama Tagihan, Jumlah, Status, Jatuh Tempo, Tanggal Bayar |
+| `Akademik` | Dikelola dari Kepengurusan: ID, ID Santri, Mata Pelajaran, Periode, Nilai, Catatan |
+| `Pengumuman` | Dikelola dari Kepengurusan: ID, Judul, Isi, Terbit (`Ya`/`Tidak`), Waktu Terbit |
+| `Pesan Wali` | Dibaca dari portal; pengurus dapat mengubah status dan mengirim balasan melalui Kepengurusan |
 
-Tautkan alamat email Google wali yang sudah diverifikasi ke ID santri pada tab
-**Portal Wali**. Untuk mencabut akses, ubah **Status Akses** menjadi `Nonaktif`
-atau hapus baris wali. Satu email boleh ditautkan ke beberapa ID santri.
-Untuk mengaktifkan login, pengelola yang diizinkan membuka halaman **Admin**,
-login dengan akun Google yang tercantum di `PORTAL_ADMIN_EMAILS`, lalu mengisi
+Tautkan alamat email wali yang valid ke ID santri pada tab
+**Portal Wali** melalui menu **Kepengurusan**. Untuk mencabut akses, ubah
+**Status Akses** menjadi `Nonaktif` atau hapus tautan wali. Satu email boleh
+ditautkan ke beberapa ID santri. Data santri harus dibuat sebelum membuat
+tautan wali, presensi, tagihan, atau data akademik. Untuk mengaktifkan login,
+pengurus membuka halaman **Admin** dengan kredensial pengurus, lalu mengisi
 ID Santri dan email wali aktif yang sudah ditautkan. Buat kata sandi unik
 minimal 12 karakter dan bagikan kepada wali melalui saluran privat. Pengelola
 dapat mengulang langkah tersebut untuk mengganti kata sandi. Satu ID Santri
@@ -164,9 +174,10 @@ serta folder Drive tetap privat dan jangan mengubah berbagi menjadi **Siapa
 saja yang memiliki link**.
 
 Jangan menyimpan kata sandi teks biasa, data kartu pembayaran, atau dokumen
-identitas di tab portal. Kata sandi hanya dapat diatur oleh akun pengelola
-yang masuk daftar `PORTAL_ADMIN_EMAILS`; batasi akses Spreadsheet dan Apps
-Script hanya kepada pengurus berwenang. Jangan menggunakan nama, alamat,
+identitas di tab portal. Kredensial login pengurus disimpan di Script
+Properties dalam bentuk hash dan hanya pengelola project Apps Script yang
+dapat mengubahnya; batasi akses project dan Spreadsheet hanya kepada pengurus
+berwenang. Jangan menggunakan nama, alamat,
 kelas, atau nomor induk sebagai kata sandi. Tetapkan prosedur backup serta
 masa penyimpanan. Apps Script, Spreadsheet, dan layanan Google lain tetap
 memiliki kuota dan batas pemakaian.
