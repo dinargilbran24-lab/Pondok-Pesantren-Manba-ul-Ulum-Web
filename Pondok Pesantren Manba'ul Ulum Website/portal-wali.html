@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portal privat wali santri Pondok Pesantren Manba'ul Ulum."
+    />
+    <meta name="theme-color" content="#f0fdf4" />
+    <title>Portal Wali Santri — Manba'ul Ulum</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="portal-config.js"></script>
+    <script src="portal.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#konten">Langsung ke konten</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Manba'ul Ulum — beranda">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M7 21.5 24 11l17 10.5v17H7v-17Z" />
+              <path d="M18 38.5V26h12v12.5M13 21l11-6.8L35 21" />
+              <path d="M24 7v7M21 7h6" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>Manba'ul Ulum</strong>
+            <span>Pondok Pesantren</span>
+          </span>
+        </a>
+        <nav class="navigation portal-nav" aria-label="Navigasi utama">
+          <a href="index.html">Beranda</a>
+          <a href="pendaftaran.html">Pendaftaran</a>
+          <a class="nav-cta" href="portal-wali.html" aria-current="page">Portal Wali</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="konten" class="portal-page">
+      <section class="container portal-content">
+        <div class="section-label">
+          <span>01</span>
+          <span class="label-line"></span>
+          <span>Ruang wali santri</span>
+        </div>
+        <h1>Terhubung dengan<br /><em>perjalanan santri.</em></h1>
+        <p class="portal-intro">
+          Lihat informasi belajar, kehadiran, tagihan, dan pengumuman. Data
+          hanya tersedia setelah pengelola memberi akses pada akun wali.
+        </p>
+
+        <p id="portal-notice" class="portal-notice" role="status" aria-live="polite">
+          Memeriksa konfigurasi portal…
+        </p>
+
+        <section id="portal-login" class="portal-login portal-card" aria-labelledby="login-title" hidden>
+          <div class="portal-section-heading">
+            <p class="eyebrow">Akses privat</p>
+            <h2 id="login-title">Masuk ke portal</h2>
+            <p>Masuk dengan nomor induk santri dan kata sandi yang diberikan secara privat oleh pengelola pesantren.</p>
+          </div>
+          <form id="portal-login-form" class="portal-form">
+            <label for="student-login-id">Nomor induk santri</label>
+            <input id="student-login-id" name="studentId" type="text" autocomplete="username" maxlength="64" required />
+            <label for="student-login-password">Kata sandi</label>
+            <input id="student-login-password" name="password" type="password" autocomplete="current-password" maxlength="128" required />
+            <button class="button button-primary" type="submit">Masuk</button>
+          </form>
+          <p class="portal-login-help">Belum menerima kata sandi atau perlu mengatur ulang? Hubungi pengelola pesantren. Jangan gunakan nama, alamat, atau nomor induk sebagai kata sandi.</p>
+        </section>
+
+        <section id="portal-app" class="portal-app" hidden aria-label="Informasi wali santri">
+          <div class="portal-welcome portal-card">
+            <div>
+              <p class="eyebrow">Assalamu'alaikum</p>
+              <h2 id="guardian-email">Wali santri</h2>
+              <p id="student-count" class="portal-muted"></p>
+            </div>
+            <button id="logout-button" class="portal-outline-button" type="button">Keluar</button>
+          </div>
+
+          <div id="portal-student-data" class="portal-student-data" hidden>
+            <div id="student-picker-wrap" class="portal-card portal-picker" hidden>
+              <label for="student-picker">Pilih santri</label>
+              <select id="student-picker"></select>
+            </div>
+
+            <div id="student-overview" class="portal-card" aria-live="polite">
+              <p class="portal-muted">Memuat informasi santri…</p>
+            </div>
+
+            <div class="portal-grid">
+              <section class="portal-card" aria-labelledby="attendance-title">
+                <p class="eyebrow">Keseharian</p>
+                <h2 id="attendance-title">Kehadiran</h2>
+                <div id="attendance-list" class="portal-list"></div>
+              </section>
+              <section class="portal-card" aria-labelledby="payments-title">
+                <p class="eyebrow">Administrasi</p>
+                <h2 id="payments-title">Tagihan dan pembayaran</h2>
+                <div id="payments-list" class="portal-list"></div>
+              </section>
+              <section class="portal-card" aria-labelledby="grades-title">
+                <p class="eyebrow">Perkembangan belajar</p>
+                <h2 id="grades-title">Akademik</h2>
+                <div id="grades-list" class="portal-list"></div>
+              </section>
+              <section class="portal-card" aria-labelledby="announcements-title">
+                <p class="eyebrow">Informasi pesantren</p>
+                <h2 id="announcements-title">Pengumuman</h2>
+                <div id="announcements-list" class="portal-list"></div>
+              </section>
+            </div>
+
+            <section class="portal-card portal-messages" aria-labelledby="messages-title">
+              <p class="eyebrow">Hubungi pengurus</p>
+              <h2 id="messages-title">Pesan untuk pesantren</h2>
+              <form id="message-form" class="portal-form">
+                <label for="message-category">Topik</label>
+                <select id="message-category" name="category" required>
+                  <option value="Akademik">Akademik</option>
+                  <option value="Kehadiran">Kehadiran atau perizinan</option>
+                  <option value="Administrasi">Administrasi</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+                <label for="message-body">Pesan</label>
+                <textarea id="message-body" name="body" rows="4" maxlength="2000" required></textarea>
+                <button class="button button-primary" type="submit">Kirim pesan</button>
+              </form>
+              <h3 class="portal-history-title">Riwayat pesan</h3>
+              <div id="messages-list" class="portal-list"></div>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-bottom">
+        <span>© <span id="current-year"></span> Pondok Pesantren Manba'ul Ulum</span>
+        <a href="index.html">Kembali ke beranda</a>
+      </div>
+    </footer>
+  </body>
+</html>

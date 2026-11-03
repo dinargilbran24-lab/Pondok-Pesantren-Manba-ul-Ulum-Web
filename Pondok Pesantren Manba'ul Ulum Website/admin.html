@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Akses admin Pondok Pesantren Manba'ul Ulum melalui layanan Google yang privat."
+    />
+    <meta name="theme-color" content="#f7f5ee" />
+    <title>Admin — Manba'ul Ulum</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="registration-config.js"></script>
+    <script src="portal-config.js"></script>
+    <script src="admin.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#konten">Langsung ke konten</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Manba'ul Ulum — beranda">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M7 21.5 24 11l17 10.5v17H7v-17Z" />
+              <path d="M18 38.5V26h12v12.5M13 21l11-6.8L35 21" />
+              <path d="M24 7v7M21 7h6" />
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>Manba'ul Ulum</strong>
+            <span>Pondok Pesantren</span>
+          </span>
+        </a>
+        <nav class="navigation admin-nav" aria-label="Navigasi utama">
+          <a href="index.html">Beranda</a>
+          <a href="pendaftaran.html">Pendaftaran</a>
+          <a href="portal-wali.html">Portal Wali</a>
+          <a class="nav-cta" href="admin.html" aria-current="page">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="konten" class="admin-page">
+      <section class="container admin-content">
+        <div class="section-label">
+          <span>01</span>
+          <span class="label-line"></span>
+          <span>Area pengelola</span>
+        </div>
+        <h1>Akses <em>Admin.</em></h1>
+        <p class="admin-intro">
+          Kelola data pendaftar melalui Google Spreadsheet. Akses memerlukan
+          login Google yang sudah diberi izin oleh pengelola yayasan.
+        </p>
+
+        <section class="admin-card" aria-labelledby="database-title">
+          <div class="admin-card-icon" aria-hidden="true">▤</div>
+          <div class="admin-card-copy">
+            <p class="eyebrow">Data penerimaan</p>
+            <h2 id="database-title">Database pendaftar</h2>
+            <p id="database-status" aria-live="polite">
+              Memeriksa konfigurasi tautan database…
+            </p>
+            <a
+              id="database-link"
+              class="button button-primary admin-button"
+              target="_blank"
+              rel="noopener noreferrer"
+              hidden
+            >
+              Buka Google Spreadsheet <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="admin-card admin-card-muted" aria-labelledby="content-title">
+          <div class="admin-card-icon" aria-hidden="true">✳</div>
+          <div class="admin-card-copy">
+            <p class="eyebrow">Konten website</p>
+            <h2 id="content-title">Profil, program, dan informasi</h2>
+            <p>
+              Konten website saat ini masih berupa file statis. Perubahannya
+              dilakukan pada file website dan diterbitkan ulang melalui GitHub
+              Pages; belum ada CMS untuk mengeditnya dari halaman Admin.
+            </p>
+            <a class="text-link admin-back-link" href="index.html">
+              Kembali ke website <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="admin-card" aria-labelledby="guardian-password-title">
+          <div class="admin-card-icon" aria-hidden="true">⌑</div>
+          <div class="admin-card-copy">
+            <p class="eyebrow">Akses wali santri</p>
+            <h2 id="guardian-password-title">Atur kata sandi portal</h2>
+            <p>
+              Pengelola yang diizinkan dapat membuat atau mengganti kata sandi
+              untuk nomor induk santri. Kata sandi disimpan sebagai hash, bukan
+              teks biasa, dan harus dibagikan kepada wali secara privat.
+            </p>
+            <p id="guardian-password-status" class="admin-password-status" aria-live="polite">
+              Memeriksa konfigurasi akses pengelola…
+            </p>
+            <div id="guardian-password-google-button" class="portal-google-button"></div>
+            <form id="guardian-password-form" class="portal-form" hidden>
+              <label for="credential-student-id">Nomor induk santri</label>
+              <input id="credential-student-id" name="studentId" type="text" maxlength="64" autocomplete="off" required />
+              <label for="credential-guardian-email">Email wali yang sudah ditautkan</label>
+              <input id="credential-guardian-email" name="guardianEmail" type="email" maxlength="254" autocomplete="email" required />
+              <label for="credential-password">Kata sandi baru (minimal 12 karakter)</label>
+              <input id="credential-password" name="password" type="password" minlength="12" maxlength="128" autocomplete="new-password" required />
+              <label for="credential-password-confirm">Ulangi kata sandi baru</label>
+              <input id="credential-password-confirm" name="passwordConfirm" type="password" minlength="12" maxlength="128" autocomplete="new-password" required />
+              <button class="button button-primary" type="submit">Simpan kata sandi</button>
+              <button id="guardian-password-logout" class="portal-text-button" type="button">Keluar dari pengaturan</button>
+            </form>
+          </div>
+        </section>
+
+        <p class="admin-security-note">
+          Tautan Spreadsheet saja tidak memberikan akses. Jangan ubah setelan
+          berbagi menjadi “Siapa saja”; berikan izin hanya ke akun Google
+          pengelola yang berwenang. Atur izin pengelola Portal Wali di Script
+          Property `PORTAL_ADMIN_EMAILS`. Dokumen pendaftar tetap berada di
+          folder Drive privat.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-bottom">
+        <span>© <span id="current-year"></span> Pondok Pesantren Manba'ul Ulum</span>
+        <a href="index.html">Kembali ke beranda</a>
+      </div>
+    </footer>
+  </body>
+</html>
