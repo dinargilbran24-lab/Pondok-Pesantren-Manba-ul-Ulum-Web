@@ -35,6 +35,7 @@
           <a href="index.html">Beranda</a>
           <a href="pendaftaran.html">Pendaftaran</a>
           <a href="portal-wali.html">Portal Wali</a>
+          <a href="#kepengurusan">Kepengurusan</a>
           <a class="nav-cta" href="admin.html" aria-current="page">Admin</a>
         </nav>
       </div>
@@ -49,10 +50,30 @@
         </div>
         <h1>Akses <em>Admin.</em></h1>
         <p class="admin-intro">
-          Kelola data pendaftar melalui Google Spreadsheet. Akses memerlukan
-          login Google yang sudah diberi izin oleh pengelola yayasan.
+          Kelola data pendaftar dan informasi Portal Wali. Kepengurusan portal
+          memakai akun pengelola terpisah dari akun Google.
         </p>
 
+        <section id="admin-login-panel" class="admin-card admin-login-panel" aria-labelledby="admin-login-title">
+          <div class="admin-card-icon" aria-hidden="true">⌑</div>
+          <div class="admin-card-copy">
+            <p class="eyebrow">Akses privat</p>
+            <h2 id="admin-login-title">Login pengurus</h2>
+            <p>Gunakan nama pengguna dan kata sandi pengelola yang disiapkan di Apps Script.</p>
+            <p id="admin-login-status" class="admin-password-status" aria-live="polite">
+              Menyiapkan login pengurus…
+            </p>
+            <form id="admin-login-form" class="portal-form">
+              <label for="admin-username">Nama pengguna</label>
+              <input id="admin-username" name="username" type="text" autocomplete="username" maxlength="64" required />
+              <label for="admin-password">Kata sandi pengurus</label>
+              <input id="admin-password" name="password" type="password" autocomplete="current-password" maxlength="128" required />
+              <button class="button button-primary" type="submit">Masuk sebagai pengurus</button>
+            </form>
+          </div>
+        </section>
+
+        <div id="admin-tools" hidden>
         <section class="admin-card" aria-labelledby="database-title">
           <div class="admin-card-icon" aria-hidden="true">▤</div>
           <div class="admin-card-copy">
@@ -100,9 +121,8 @@
               teks biasa, dan harus dibagikan kepada wali secara privat.
             </p>
             <p id="guardian-password-status" class="admin-password-status" aria-live="polite">
-              Memeriksa konfigurasi akses pengelola…
+              Buat atau ganti kata sandi wali yang sudah terhubung ke santri.
             </p>
-            <div id="guardian-password-google-button" class="portal-google-button"></div>
             <form id="guardian-password-form" class="portal-form" hidden>
               <label for="credential-student-id">Nomor induk santri</label>
               <input id="credential-student-id" name="studentId" type="text" maxlength="64" autocomplete="off" required />
@@ -113,18 +133,59 @@
               <label for="credential-password-confirm">Ulangi kata sandi baru</label>
               <input id="credential-password-confirm" name="passwordConfirm" type="password" minlength="12" maxlength="128" autocomplete="new-password" required />
               <button class="button button-primary" type="submit">Simpan kata sandi</button>
-              <button id="guardian-password-logout" class="portal-text-button" type="button">Keluar dari pengaturan</button>
             </form>
           </div>
         </section>
 
+        <section id="kepengurusan" class="admin-management admin-card" aria-labelledby="management-title">
+          <div class="admin-card-icon" aria-hidden="true">▦</div>
+          <div class="admin-card-copy">
+            <p class="eyebrow">Kelola Portal Wali</p>
+            <h2 id="management-title">Kepengurusan</h2>
+            <p>
+              Kelola data santri dan wali, presensi, tagihan, akademik,
+              pengumuman, serta balasan pesan. Perubahan hanya dapat dilakukan
+              setelah login sebagai pengelola. Konten halaman publik website
+              tidak termasuk menu ini.
+            </p>
+            <p id="management-status" class="admin-password-status" aria-live="polite">Data portal siap dikelola.</p>
+            <div id="admin-portal-management" hidden>
+              <div class="admin-management-toolbar">
+                <label for="management-entity">Jenis informasi</label>
+                <select id="management-entity">
+                  <option value="students">Data santri</option>
+                  <option value="guardians">Akses wali</option>
+                  <option value="attendance">Presensi</option>
+                  <option value="payments">Tagihan dan pembayaran</option>
+                  <option value="grades">Akademik</option>
+                  <option value="announcements">Pengumuman</option>
+                  <option value="messages">Pesan wali</option>
+                </select>
+                <button id="management-add" class="button button-primary" type="button">Tambah data</button>
+                <button id="management-refresh" class="portal-outline-button" type="button">Muat ulang</button>
+                <button id="admin-portal-logout" class="portal-outline-button" type="button">Keluar</button>
+              </div>
+              <div id="management-list" class="admin-record-list" aria-live="polite"></div>
+              <form id="management-form" class="portal-form admin-management-form" hidden>
+                <h3 id="management-form-title"></h3>
+                <div id="management-fields" class="admin-management-fields"></div>
+                <div class="admin-management-actions">
+                  <button class="button button-primary" type="submit">Simpan</button>
+                  <button id="management-cancel" class="portal-outline-button" type="button">Batal</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
         <p class="admin-security-note">
-          Tautan Spreadsheet saja tidak memberikan akses. Jangan ubah setelan
-          berbagi menjadi “Siapa saja”; berikan izin hanya ke akun Google
-          pengelola yang berwenang. Atur izin pengelola Portal Wali di Script
-          Property `PORTAL_ADMIN_EMAILS`. Dokumen pendaftar tetap berada di
-          folder Drive privat.
+          Login nama pengguna dan kata sandi mengelola menu Portal Wali, bukan
+          akun Google. Membuka Google Spreadsheet pendaftar tetap mengikuti izin
+          berbagi Google pada dokumen tersebut. Jangan ubah setelan berbagi
+          menjadi “Siapa saja”; dokumen pendaftar tetap berada di folder Drive
+          privat.
         </p>
+        </div>
       </section>
     </main>
 

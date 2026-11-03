@@ -1898,6 +1898,37 @@ h2 em {
   .admin-card-copy h2 {
     font-size: 20px;
   }
+
+  .admin-management {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .admin-management-toolbar {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .admin-management-toolbar select {
+    grid-column: 1 / -1;
+  }
+
+  .admin-management-toolbar .button,
+  .admin-management-toolbar .portal-outline-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-record {
+    flex-direction: column;
+  }
+
+  .admin-management-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-management-field-wide {
+    grid-column: auto;
+  }
 }
 
 .portal-page {
@@ -1977,6 +2008,180 @@ h2 em {
 
 .admin-password-status {
   margin-top: 16px !important;
+}
+
+.admin-management {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 22px;
+  margin-top: 16px;
+}
+
+.admin-tools-hidden,
+#admin-tools[hidden] {
+  display: none;
+}
+
+.admin-login-panel {
+  max-width: 760px;
+}
+
+.admin-management-toolbar {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) auto auto;
+  align-items: end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.admin-management-toolbar label {
+  grid-column: 1 / -1;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-management-toolbar select,
+.admin-management-field input,
+.admin-management-field select,
+.admin-management-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
+
+.admin-management-toolbar .button {
+  min-height: 44px;
+  border: 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.admin-record-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.admin-record {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffefa;
+}
+
+.admin-record-copy {
+  min-width: 0;
+}
+
+.admin-record-copy h3 {
+  margin: 0 0 7px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.admin-record-copy p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.admin-record-actions,
+.admin-management-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-record-actions .portal-outline-button,
+.admin-management-actions .portal-outline-button {
+  min-height: 38px;
+}
+
+.admin-delete-button {
+  border-color: rgba(161, 38, 34, 0.3);
+  color: #a12622;
+}
+
+.admin-management-form {
+  margin-top: 22px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7f5ee;
+}
+
+.admin-management-form h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.admin-management-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-management-field {
+  display: grid;
+  gap: 7px;
+}
+
+.admin-management-field-wide {
+  grid-column: 1 / -1;
+}
+
+.admin-management-field label {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-management-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-management-field input:focus,
+.admin-management-field select:focus,
+.admin-management-field textarea:focus,
+.admin-management-toolbar select:focus {
+  outline: 2px solid rgba(6, 78, 59, 0.25);
+  border-color: var(--green);
+}
+
+.admin-management-actions {
+  align-items: center;
+}
+
+.admin-management-actions .button {
+  min-height: 44px;
+  border: 0;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.admin-management-actions .button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 .portal-form[hidden] {
